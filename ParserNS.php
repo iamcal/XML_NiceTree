@@ -114,7 +114,13 @@
 
 		function parseString($data, $eof = false){
 			if (!xml_parse($this->parser, $data, $eof)){
-				$this->raiseError($this->parser);
+
+				$e_code = xml_get_error_code($this->parser);
+				$e_str = xml_error_string($this->parser);
+				$e_line = xml_get_current_line_number($this->parser);
+				$c_col = xml_get_current_column_number($this->parser);
+
+				$this->raiseError("$e_code: $e_str at line $e_line, col $e_col");
 				xml_parser_free($this->parser);
 				return 0;
 			}
